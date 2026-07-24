@@ -7,9 +7,9 @@ from langchain_core.output_parsers import StrOutputParser
 from config import GOOGLE_API_KEY
 from utils import load_pdf, split_documents
 
-# ---------------------------
+
 # Embedding Model
-# ---------------------------
+
 
 embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
@@ -17,9 +17,9 @@ embeddings = HuggingFaceEmbeddings(
 
 persist_directory = "chroma_db"
 
-# ---------------------------
+
 # Load PDF
-# ---------------------------
+
 
 documents = load_pdf("data/sample.pdf")
 
@@ -28,9 +28,8 @@ chunks = split_documents(documents)
 print(f"Pages Loaded : {len(documents)}")
 print(f"Chunks Created : {len(chunks)}")
 
-# ---------------------------
+
 # Vector Database
-# ---------------------------
 
 vector_store = Chroma.from_documents(
     documents=chunks,
@@ -40,9 +39,9 @@ vector_store = Chroma.from_documents(
 
 print("✅ ChromaDB created successfully!")
 
-# ---------------------------
+
 # Retriever
-# ---------------------------
+
 
 retriever = vector_store.as_retriever(
     search_type="similarity",
@@ -51,9 +50,8 @@ retriever = vector_store.as_retriever(
 
 print("✅ Retriever created successfully!")
 
-# ---------------------------
+
 # Gemini LLM
-# ---------------------------
 
 llm = ChatGoogleGenerativeAI(
     model="models/gemini-3.5-flash",
@@ -61,9 +59,9 @@ llm = ChatGoogleGenerativeAI(
     temperature=0
 )
 
-# ---------------------------
+
 # Prompt
-# ---------------------------
+
 
 prompt = ChatPromptTemplate.from_template("""
 You are a helpful AI assistant.
@@ -79,9 +77,8 @@ Question:
 
 chain = prompt | llm | StrOutputParser()
 
-# ---------------------------
+
 # Function
-# ---------------------------
 
 def ask_question(question):
 
